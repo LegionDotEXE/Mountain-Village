@@ -16,7 +16,7 @@
 </head>
 <body>
   <div id="info">
-    Wow Feature: Spinning windmill with animated blades + day/night cycle
+    Needs to be decided.
   </div>
 
 <script type="importmap">
@@ -30,6 +30,8 @@
 
   <script type="module">
     import * as THREE from 'three';
+
+    var loader = new THREE.TextureLoader();
 
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -77,6 +79,22 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+
+    var grassTex = loader.load('textures/grass.png');
+    grassTex.wrapS = THREE.RepeatWrapping;
+    grassTex.wrapT = THREE.RepeatWrapping;
+    grassTex.repeat.set(10, 10);
+
+    var ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(50, 50),
+        new THREE.MeshStandardMaterial({ map: grassTex })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    var woodTex = loader.load('textures/wall.png');
+    cube1.material = new THREE.MeshStandardMaterial({ map: woodTex });
 
     function animate(time) {
       time *= 0.001;
