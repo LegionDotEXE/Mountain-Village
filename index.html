@@ -16,7 +16,7 @@
 </head>
 <body>
   <div id="info">
-    Needs to be decided.
+    Wow Factor: Windmill with animated rotating blades
   </div>
 
 <script type="importmap">
@@ -31,6 +31,7 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
     var loader = new THREE.TextureLoader();
 
@@ -78,9 +79,26 @@
         new THREE.SphereGeometry(0.1, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0xffaa33 })
     );
-    
+
     pointHelper.position.copy(pointLight.position);
     scene.add(pointHelper);
+
+    var gltfLoader = new GLTFLoader();
+    gltfLoader.load('models/scene.glb', function(gltf) {
+        var model = gltf.scene;
+        model.position.set(-6, -1, -8);
+        model.scale.set(0.01, 0.01, 0.01);
+        model.traverse(function(child) {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+      });
+        scene.add(model);
+        console.log('GLB model loaded');
+    }, undefined, function(error) {
+        console.error('Error loading model.');
+    });
 
     var cube1 = new THREE.Mesh(
       new THREE.BoxGeometry(1, 1, 1),
@@ -105,12 +123,6 @@
     cube3.position.set(3, 0.5, 0);
     cube3.castShadow = true;
     scene.add(cube3);
-
-    window.addEventListener('resize', function() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
 
     var grassTex = loader.load('textures/grass.png');
     grassTex.wrapS = THREE.RepeatWrapping;
@@ -140,7 +152,20 @@
         cube3.rotation.x = time * 0.7;
         cube3.rotation.y = time;
 
-        controls.update();    
+        bladeGroup.rotation.z = time * 0.8;
+
+        var cycle = (Math.sin(time * 0.2) + 1) / 2;
+        var dayColor = new THREE.Color(0xffffff);
+        var nightColor = new THREE.Color(0x111133);
+        var currentColor = dayColor.clone().lerp(nightColor, cycle);
+        dirLight.color.copy(currentColor);
+        dirLight.intensity = 1.5 - cycle * 1.0;
+
+        ambientLight.intensity = 1.0 - cycle * 0.6;
+
+        pointLight.intensity = 0.5 + cycle * 2.5;
+
+        controls.update();
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
     }
