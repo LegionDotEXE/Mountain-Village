@@ -197,6 +197,7 @@
     // Fence
     for (var i = 0; i < 10; i++) {
       var post = new THREE.Mesh(
+
         new THREE.CylinderGeometry(0.05, 0.05, 1, 6),
         new THREE.MeshStandardMaterial({ color: 0x8B6914 })
       );
@@ -207,8 +208,8 @@
 
     // Pond
     var pond = new THREE.Mesh(
-      new THREE.CircleGeometry(2, 32),
-      new THREE.MeshStandardMaterial({ color: 0x4488cc, transparent: true, opacity: 0.7 })
+        new THREE.CircleGeometry(2, 32),
+        new THREE.MeshStandardMaterial({ color: 0x4488cc, transparent: true, opacity: 0.7 })
     );
     pond.rotation.x = -Math.PI / 2;
     pond.position.set(6, 0.01, 0);
@@ -216,24 +217,24 @@
 
     // Rocks near pond
     var rock1 = new THREE.Mesh(
-      new THREE.SphereGeometry(0.3, 6, 6),
-      new THREE.MeshStandardMaterial({ color: 0x777777 })
+        new THREE.SphereGeometry(0.3, 6, 6),
+        new THREE.MeshStandardMaterial({ color: 0x777777 })
     );
     rock1.position.set(5.5, 0.5, 2);
     rock1.scale.set(1, 0.6, 1);
     scene.add(rock1);
 
     var rock2 = new THREE.Mesh(
-      new THREE.SphereGeometry(0.4, 6, 6),
-      new THREE.MeshStandardMaterial({ color: 0x666666 })
+        new THREE.SphereGeometry(0.4, 6, 6),
+        new THREE.MeshStandardMaterial({ color: 0x666666 })
     );
     rock2.position.set(4.5, 0.2, 1.5);
     rock2.scale.set(1.2, 0.5, 1);
     scene.add(rock2);
 
     var rock3 = new THREE.Mesh(
-      new THREE.SphereGeometry(0.4, 5, 4),
-      new THREE.MeshStandardMaterial({ color: 0x666666 })
+        new THREE.SphereGeometry(0.4, 5, 4),
+        new THREE.MeshStandardMaterial({ color: 0x666666 })
     );
     rock3.position.set(6, 0.2, -2.3);
     rock3.scale.set(2.5, 1.2, 2.0);
@@ -258,7 +259,6 @@
     scene.add(wellRoof);
 
     // Stone Paths
-
     for (var i = 0; i < 5; i++) {
       var stone = new THREE.Mesh(
         new THREE.CylinderGeometry(0.3, 0.35, 0.05, 8),
@@ -275,6 +275,41 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
+    // Wow Factor
+    // WindMill
+
+    var windmillBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.5, 0.8, 4, 8),
+      new THREE.MeshStandardMaterial({ color: 0xccbbaa })
+    );
+    windmillBase.position.set(-10, 2, -5);
+    windmillBase.castShadow = true;
+    scene.add(windmillBase);
+
+    var windmillTop = new THREE.Mesh(
+      new THREE.ConeGeometry(0.8, 1, 8),
+      new THREE.MeshStandardMaterial({ color: 0x8b0000 })
+    );
+    windmillTop.position.set(-10, 4.5, -5);
+    scene.add(windmillTop);
+
+    var bladeGroup = new THREE.Group();
+    bladeGroup.position.set(-10, 3.5, -4.5);
+
+    for (var b = 0; b < 4; b++) {
+      var blade = new THREE.Mesh(
+        new THREE.BoxGeometry(0.15, 2.5, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0xddc999 })
+      );
+      blade.position.set(0, 1.25, 0);
+
+      var bladePivot = new THREE.Group();
+      bladePivot.add(blade);
+      bladePivot.rotation.z = (b * Math.PI) / 2;
+      bladeGroup.add(bladePivot);
+    }
+
+    scene.add(bladeGroup);
 
     var grassTex = loader.load('textures/grass.png');
     grassTex.wrapS = THREE.RepeatWrapping;
