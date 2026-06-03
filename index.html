@@ -66,6 +66,22 @@
     dirLight.castShadow = true;
     scene.add(dirLight);
 
+    var ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+    scene.add(ambientLight);
+
+    var pointLight = new THREE.PointLight(0xffaa33, 1.5, 20);
+    pointLight.position.set(-2, 3, 2);
+    pointLight.castShadow = true;
+    scene.add(pointLight);
+
+    var pointHelper = new THREE.Mesh(
+        new THREE.SphereGeometry(0.1, 8, 8),
+        new THREE.MeshBasicMaterial({ color: 0xffaa33 })
+    );
+    
+    pointHelper.position.copy(pointLight.position);
+    scene.add(pointHelper);
+
     var cube1 = new THREE.Mesh(
       new THREE.BoxGeometry(1, 1, 1),
       new THREE.MeshStandardMaterial({ color: 0xff4444 })
